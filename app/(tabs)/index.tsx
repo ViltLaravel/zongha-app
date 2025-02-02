@@ -1,18 +1,14 @@
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { HStack } from "@/components/ui/hstack";
 import { ArrowRightIcon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
-import { SafeAreaView, Text } from "react-native";
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native";
 
-export default function HomeScreen() {
+export default function DashboardScreen() {
   return (
     <SafeAreaView>
-      <HStack className="justify-between">
-        <Text>Home</Text>
-        <Text>Profile</Text>
-      </HStack>
-      <VStack>
-        <Button>
+      <VStack className="p-4">
+        <Button onPress={() => router.push("/signin")}>
           <ButtonText>Go to login</ButtonText>
           <ButtonIcon as={ArrowRightIcon} />
         </Button>

@@ -11,7 +11,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
   });
 
   useEffect(() => {
@@ -27,6 +27,8 @@ export default function RootLayout() {
   return (
     <GluestackUIProvider mode="light">
       <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="signin" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
