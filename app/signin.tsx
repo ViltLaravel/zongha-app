@@ -46,11 +46,11 @@ export default function SignInScreen() {
           isRequired={false}
         >
           <FormControlLabel>
-            <FormControlLabelText className="font-poppins">
+            <FormControlLabelText className="font-poppins mt-1">
               Email
             </FormControlLabelText>
           </FormControlLabel>
-          <Input className="my-1" size="sm">
+          <Input size="md">
             <InputField
               className="font-poppins"
               type="text"
@@ -60,11 +60,11 @@ export default function SignInScreen() {
             />
           </Input>
           <FormControlLabel>
-            <FormControlLabelText className="font-poppins">
+            <FormControlLabelText className="font-poppins mt-1">
               Password
             </FormControlLabelText>
           </FormControlLabel>
-          <Input className="my-1" size="sm">
+          <Input size="md">
             <InputField
               className="font-poppins"
               type="password"

@@ -15,7 +15,7 @@ export default function MainScreen() {
             className="bg-white w-full max-w-xs rounded-lg"
             onPress={() => router.push("/signin")}
           >
-            <ButtonText className=" text-[#4B74E8] text-lg font-poppins font-semibold">
+            <ButtonText className=" text-[#4B74E8] text-base font-poppins font-semibold">
               Continue
             </ButtonText>
             <ButtonIcon as={ArrowRightIcon} className="text-[#4B74E8]" />
