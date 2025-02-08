@@ -46,9 +46,23 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { clearAuthToken } from "@/redux/_slice/sign-in-slice";
 
 export default function DashboardScreen() {
+  const signInState = useSelector((state: RootState) => state.signInState);
+  const dispatch = useDispatch();
   const [showDrawer, setShowDrawer] = React.useState(false);
+  const handleSigOut = async () => {
+    await AsyncStorage.removeItem("authToken");
+    dispatch(clearAuthToken({ token: "", isAuthenticated: false }));
+    if (!signInState.auth.token) {
+      router.push("/signin");
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView className="p-4 items-center gap-5">
@@ -93,7 +107,7 @@ export default function DashboardScreen() {
               <Button
                 onPress={() => {
                   setShowDrawer(false);
-                  router.push("/signin");
+                  handleSigOut();
                 }}
                 className="flex-1"
               >

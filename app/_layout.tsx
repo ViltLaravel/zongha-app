@@ -1,12 +1,15 @@
 import { useFonts } from "expo-font";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "@/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearAuthToken, setAuthToken } from "@/redux/_slice/sign-in-slice";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -23,6 +26,42 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
+
+  return (
+    <Provider store={store}>
+      <ReduxWrapper />
+    </Provider>
+  );
+}
+
+function ReduxWrapper() {
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.signInState);
+
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          dispatch(setAuthToken({ token: token, isAuthenticated: true }));
+        } else {
+          dispatch(clearAuthToken({ token: "", isAuthenticated: false }));
+        }
+      } catch (e) {
+        console.error("Failed to load token from AsyncStorage", e);
+      }
+    };
+
+    loadToken();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (state.auth.isAuthenticated) {
+      router.replace("/(tabs)");
+    } else {
+      router.replace("/signin");
+    }
+  }, [state.auth.isAuthenticated]);
 
   return (
     <GluestackUIProvider mode="light">
