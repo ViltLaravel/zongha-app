@@ -44,12 +44,14 @@ import {
 import { Text } from "@/components/ui/text";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { clearAuthToken } from "@/redux/_slice/sign-in-slice";
+import { clearAuthToken, userLoaded } from "@/redux/_slice/sign-in-slice";
+import { userIndex } from "@/actions/sign-in-action";
+import { User } from "@/models/user";
 
 export default function DashboardScreen() {
   const signInState = useSelector((state: RootState) => state.signInState);
@@ -63,13 +65,30 @@ export default function DashboardScreen() {
     }
   };
 
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const user = await userIndex(signInState.auth.token);
+        if (user && user.data.success) {
+          dispatch(userLoaded(user.data.user as unknown as User));
+        }
+      } catch (e) {
+        console.error("Failed to load user", e);
+      }
+    };
+
+    loadUser();
+  }, [dispatch, signInState.auth.token]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView className="p-4 items-center gap-5">
         <View className="justify-start gap-2 items-start w-full">
           <Pressable onPress={() => setShowDrawer(true)}>
             <Avatar size="lg">
-              <AvatarFallbackText>Nicole Amoguis</AvatarFallbackText>
+              <AvatarFallbackText>
+                {signInState.user?.name ?? "Name"}
+              </AvatarFallbackText>
               <AvatarImage
                 source={{
                   uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
@@ -78,8 +97,8 @@ export default function DashboardScreen() {
               <AvatarBadge />
             </Avatar>
           </Pressable>
-          <Text className="font-poppins font-extrabold text-2xl">
-            Hello Nicole Amoguis,
+          <Text className="font-poppins font-extrabold capitalize text-2xl">
+            Hello {signInState.user?.name ?? "Name"},
           </Text>
           <Text className="font-poppins font-extrabold text-lg">
             Welcome Back!

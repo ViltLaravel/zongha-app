@@ -1,8 +1,29 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearAuthToken, setAuthToken } from "@/redux/_slice/sign-in-slice";
+import { useDispatch } from "react-redux";
 
 export default function TabLayout() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          dispatch(setAuthToken({ token: token, isAuthenticated: true }));
+        } else {
+          dispatch(clearAuthToken({ token: "", isAuthenticated: false }));
+        }
+      } catch (e) {
+        console.error("Failed to load token from AsyncStorage", e);
+      }
+    };
+
+    loadToken();
+  }, [dispatch]);
+
   return (
     <Tabs
       screenOptions={{

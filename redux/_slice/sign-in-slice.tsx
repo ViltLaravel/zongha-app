@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SignInState } from "../_state/sign-in-state";
 import { Auth } from "@/models/auth";
+import { User } from "@/models/user";
 
 export const initialState: SignInState = {
   auth: {
@@ -10,6 +11,14 @@ export const initialState: SignInState = {
   email: "",
   password: "",
   isLoading: false,
+  user: {
+    id: "",
+    email: "",
+    name: "",
+    email_verified_at: "",
+    created_at: "",
+    updated_at: "",
+  },
 };
 
 export const signInSlice = createSlice({
@@ -46,6 +55,12 @@ export const signInSlice = createSlice({
         isLoading: action.payload,
       };
     },
+    userLoaded(state: SignInState, action: PayloadAction<User>) {
+      return {
+        ...state,
+        user: action.payload,
+      };
+    },
   },
 });
 
@@ -55,6 +70,7 @@ export const {
   emailChanged,
   passwordChanged,
   loadingChanged,
+  userLoaded,
 } = signInSlice.actions;
 
 export default signInSlice.reducer;

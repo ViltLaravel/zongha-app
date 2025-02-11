@@ -18,3 +18,19 @@ export async function signIn(formData: FormData) {
     throw error;
   }
 }
+
+export async function index(token?: string) {
+  try {
+    const res = await fetch(`http://209.38.56.190:8000/api/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return await res.json();
+  } catch (error) {
+    console.error("Fetching user error:", error);
+    throw error;
+  }
+}
